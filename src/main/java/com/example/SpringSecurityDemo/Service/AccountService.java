@@ -17,7 +17,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
@@ -91,12 +90,10 @@ public class AccountService {
         Set<Role> newRoles = new HashSet<>(roleRepository.findAllById(roleIds));
 
 
-        // Log to debug the roles being assigned
         if (newRoles.isEmpty()) {
             throw new RuntimeException("Roles not found");
         }
 
-        // Log the roles being assigned
         System.out.println("Assigning roles: " + newRoles);
 
         breeder.setRoles(newRoles);

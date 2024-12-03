@@ -3,10 +3,6 @@ package com.example.SpringSecurityDemo.Service;
 import com.example.SpringSecurityDemo.Entity.User.Breeder;
 import com.example.SpringSecurityDemo.Repository.BreederRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
