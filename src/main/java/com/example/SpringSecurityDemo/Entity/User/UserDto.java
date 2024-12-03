@@ -21,31 +21,16 @@ public class UserDto {
             message = "Username can only contain letters, numbers, and underscores"
     )
     private String username;
-
-
-    @NotBlank(message = "Email is required")
-    @Email(
-            regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
-            message = "Invalid email format"
-    )
-    private String email;
-
-
-    @NotBlank(message = "Phone number is required")
+    @NotBlank(message = "nomColombie is required and cannot be blank")
+    @Size(min = 3, max = 20, message = "Username must be between 3 and 20 characters")
     @Pattern(
-            regexp = "^\\+?[0-9]{7,15}$",
-            message = "Phone number must be valid and contain 7 to 15 digits (optional + for country code)"
+            regexp = "^[a-zA-Z0-9_]*$",
+            message = "nomColombie can only contain letters, numbers, and underscores"
     )
-    private String phone;
+    private String nomColombie;
 
 
-    @NotBlank(message = "Address is required and cannot be blank")
-    @Size(max = 255, message = "Address cannot exceed 255 characters")
-    @Pattern(
-            regexp = "^[a-zA-Z0-9.,'\\-\\s#]*$",
-            message = "Address can only contain letters, numbers, spaces, and common punctuation (.,'-#)"
-    )
-    private String address;
+
 
 
     @NotBlank(message = "Password is required and cannot be blank")
