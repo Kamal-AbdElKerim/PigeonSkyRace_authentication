@@ -41,19 +41,17 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     }
 
     public void handleAccessDeniedException(HttpServletRequest request, HttpServletResponse response, AccessDeniedException ex) throws IOException {
-        // Custom error message for Forbidden
+
         ErrorMessageDTO errorMessageDTO = ErrorMessageDTO.builder()
                 .message("Access denied: You do not have permission to access this resource.")
                 .timestamp(new Date())
                 .code(HttpServletResponse.SC_FORBIDDEN)  // 403 Status code
                 .build();
 
-        // Serialize ErrorMessage to JSON
         String jsonResponse = objectMapper.writeValueAsString(errorMessageDTO);
 
-        // Send the response as JSON with the custom error message
         response.setStatus(HttpServletResponse.SC_FORBIDDEN); // 403 status code
         response.setContentType("application/json");
-        response.getWriter().write(jsonResponse); // Write the JSON response
+        response.getWriter().write(jsonResponse);
     }
 }
