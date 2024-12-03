@@ -3,11 +3,11 @@ package com.example.SpringSecurityDemo.Service;
 
 import com.example.SpringSecurityDemo.Entity.MapStruct.UserMapper;
 import com.example.SpringSecurityDemo.Entity.Role.Role;
-import com.example.SpringSecurityDemo.Entity.User.AppUser;
+import com.example.SpringSecurityDemo.Entity.User.Breeder;
 import com.example.SpringSecurityDemo.Entity.User.UserDto;
 import com.example.SpringSecurityDemo.Entity.User.UserResponseDto;
 import com.example.SpringSecurityDemo.Exception.EntityAlreadyExistsException;
-import com.example.SpringSecurityDemo.Repository.AppUserRepository;
+import com.example.SpringSecurityDemo.Repository.BreederRepository;
 import com.example.SpringSecurityDemo.Repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,7 @@ import java.util.*;
 @Service
 public class AccountService {
 
-    private final AppUserRepository userRepository;
+    private final BreederRepository userRepository;
     private final RoleRepository roleRepository;
     private final UserMapper userMapper;
 
@@ -32,7 +32,7 @@ public class AccountService {
     public ResponseEntity<Object> InfoAuth(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        Optional<AppUser> otherUser = Optional.ofNullable(userRepository.findByEmail(authentication.getName()));
+        Optional<Breeder> otherUser = Optional.ofNullable(userRepository.findByNomColombie(authentication.getName()));
 
         if (otherUser.isPresent()) {
             return generateUserResponseDto(otherUser.get());
@@ -44,16 +44,14 @@ public class AccountService {
     public ResponseEntity<Object> createUser(UserDto userDto){
         var bCryptEncoder = new BCryptPasswordEncoder();
 
-        AppUser appuser = userMapper.userDtoToAppUser(userDto);
+        Breeder appuser = userMapper.userDtoToAppUser(userDto);
 
-        if (userDto.getEmail().equalsIgnoreCase(userDto.getPassword())) {
-            throw new IllegalArgumentException("Password cannot be the same as the email.");
-        }
 
-        Optional<AppUser> otherUser = Optional.ofNullable(userRepository.findByEmail(userDto.getEmail()));
+
+        Optional<Breeder> otherUser = Optional.ofNullable(userRepository.findByNomColombie(userDto.getNomColombie()));
 
         if (otherUser.isPresent()) {
-            throw new EntityAlreadyExistsException("Email", "Email address already used.");
+            throw new EntityAlreadyExistsException("NomColombie", "NomColombie  already used.");
         }
 
         Role ROLE_USER = roleRepository.findByName("ROLE_USER")
@@ -70,12 +68,12 @@ public class AccountService {
         return generateUserResponseDto(appuser);
     }
 
-    private ResponseEntity<Object> generateUserResponseDto(AppUser appUser) {
+    private ResponseEntity<Object> generateUserResponseDto(Breeder breeder) {
         // Generate JWT token
      //   String jwtToken = securityConfiguration.createJwtToken(appUser);
 
         // Map AppUser to UserResponseDto
-        UserResponseDto userResponseDto = userMapper.appUserToUserResponseDto(appUser);
+        UserResponseDto userResponseDto = userMapper.appUserToUserResponseDto(breeder);
 
         // Prepare response
         var response = new HashMap<String, Object>();
@@ -85,8 +83,8 @@ public class AccountService {
         return ResponseEntity.ok(response);
     }
 
-    private String generateUserID(AppUser appUser) {
-        return UUID.randomUUID().toString().substring(0, 10) + appUser.getEmail().toLowerCase()  + UUID.randomUUID().toString().substring(0, 10);
+    private String generateUserID(Breeder breeder) {
+        return UUID.randomUUID().toString().substring(0, 10) + breeder.getNomColombie().toLowerCase()  + UUID.randomUUID().toString().substring(0, 10);
     }
 
 

@@ -1,8 +1,8 @@
 package com.example.SpringSecurityDemo.Config;
 
-import com.example.SpringSecurityDemo.Entity.User.AppUser;
+import com.example.SpringSecurityDemo.Entity.User.Breeder;
 import com.example.SpringSecurityDemo.Entity.Role.Role;
-import com.example.SpringSecurityDemo.Repository.AppUserRepository;
+import com.example.SpringSecurityDemo.Repository.BreederRepository;
 import com.example.SpringSecurityDemo.Repository.RoleRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +17,7 @@ public class DataLoader {
 
 
         @Bean
-        public CommandLineRunner loadData(AppUserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+        public CommandLineRunner loadData(BreederRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
             return args -> {
                 // Save roles if they don't already exist
                 Role adminRole = roleRepository.findByName("ROLE_ADMIN")
@@ -29,10 +29,10 @@ public class DataLoader {
 
                 // Save Admin user
                 if (userRepository.findByUsername("admin").isEmpty()) {
-                    AppUser adminUser = new AppUser();
+                    Breeder adminUser = new Breeder();
                     adminUser.setName("Admin User");
                     adminUser.setUsername("admin");
-                    adminUser.setEmail("admin@example.com");
+                    adminUser.setNomColombie("Admin");
                     adminUser.setUserID(generateUserID(adminUser));
                     adminUser.setPassword(passwordEncoder.encode("admin123"));
 
@@ -42,10 +42,10 @@ public class DataLoader {
 
                 // Save Normal User
                 if (userRepository.findByUsername("user").isEmpty()) {
-                    AppUser normalUser = new AppUser();
+                    Breeder normalUser = new Breeder();
                     normalUser.setName("Normal User");
                     normalUser.setUsername("user");
-                    normalUser.setEmail("user@example.com");
+                    normalUser.setNomColombie("User");
                     normalUser.setUserID(generateUserID(normalUser));
                     normalUser.setPassword(passwordEncoder.encode("user123"));
 
@@ -55,10 +55,10 @@ public class DataLoader {
 
                 // Save Organizer User
                 if (userRepository.findByUsername("organizer").isEmpty()) {
-                    AppUser organizerUser = new AppUser();
+                    Breeder organizerUser = new Breeder();
                     organizerUser.setName("Organizer User");
                     organizerUser.setUsername("organizer");
-                    organizerUser.setEmail("organizer@example.com");
+                    organizerUser.setNomColombie("Organizer");
                     organizerUser.setUserID(generateUserID(organizerUser));
                     organizerUser.setPassword(passwordEncoder.encode("organizer123"));
 
@@ -70,8 +70,8 @@ public class DataLoader {
             };
         }
 
-    private String generateUserID(AppUser appUser) {
-        return UUID.randomUUID().toString().substring(0, 10) + appUser.getEmail().toLowerCase()  + UUID.randomUUID().toString().substring(0, 10);
+    private String generateUserID(Breeder breeder) {
+        return UUID.randomUUID().toString().substring(0, 10) + breeder.getNomColombie().toLowerCase()  + UUID.randomUUID().toString().substring(0, 10);
     }
 
 

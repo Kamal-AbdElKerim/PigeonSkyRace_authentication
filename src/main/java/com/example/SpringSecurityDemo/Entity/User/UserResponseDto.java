@@ -2,9 +2,12 @@ package com.example.SpringSecurityDemo.Entity.User;
 
 
 import com.example.SpringSecurityDemo.Entity.Role.RoleResponseDto;
+import com.example.SpringSecurityDemo.Entity.model.Pigeon;
+import com.example.SpringSecurityDemo.Entity.model.PigeonResponseDto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -12,8 +15,8 @@ import java.util.Set;
 public class UserResponseDto {
     private String userID;
     private String username;
-    private String email;
-    private String phone;
-    private String address;
+    private String nomColombie;
     private Set<RoleResponseDto> roles;
+
+    private List<PigeonResponseDto> pigeons;
 }

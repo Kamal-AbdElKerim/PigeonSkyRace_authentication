@@ -1,7 +1,7 @@
 package com.example.SpringSecurityDemo.Config;
 
-import com.example.SpringSecurityDemo.Entity.User.AppUser;
-import com.example.SpringSecurityDemo.Repository.AppUserRepository;
+import com.example.SpringSecurityDemo.Entity.User.Breeder;
+import com.example.SpringSecurityDemo.Repository.BreederRepository;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,19 +18,19 @@ import java.util.stream.Collectors;
 public class UsersDetailsService implements UserDetailsService {
 
     @Autowired
-    private AppUserRepository appUserRepository;
+    private BreederRepository breederRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        AppUser appUser = appUserRepository.findByEmail(username);
-        System.out.println(appUser.getUsername());
-        Set<GrantedAuthority> authorities = appUser.getRoles().stream()
+        Breeder breeder = breederRepository.findByNomColombie(username);
+        System.out.println(breeder.getUsername());
+        Set<GrantedAuthority> authorities = breeder.getRoles().stream()
                 .map((roles) -> new SimpleGrantedAuthority(roles.getName()))
                 .collect(Collectors.toSet());
 
         return new org.springframework.security.core.userdetails.User(
-                appUser.getEmail(),
-                appUser.getPassword(),
+                breeder.getNomColombie(),
+                breeder.getPassword(),
                 authorities
         );
 

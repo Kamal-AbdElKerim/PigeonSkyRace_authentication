@@ -4,11 +4,8 @@ package com.example.SpringSecurityDemo.Controller;
 
 import com.example.SpringSecurityDemo.Entity.User.UserDto;
 import com.example.SpringSecurityDemo.Service.AccountService;
-import com.example.SpringSecurityDemo.Service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 

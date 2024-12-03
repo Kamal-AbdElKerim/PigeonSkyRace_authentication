@@ -4,7 +4,7 @@ package com.example.SpringSecurityDemo.Entity.MapStruct;
 
 import com.example.SpringSecurityDemo.Entity.Role.Role;
 import com.example.SpringSecurityDemo.Entity.Role.RoleResponseDto;
-import com.example.SpringSecurityDemo.Entity.User.AppUser;
+import com.example.SpringSecurityDemo.Entity.User.Breeder;
 import com.example.SpringSecurityDemo.Entity.User.UserDto;
 import com.example.SpringSecurityDemo.Entity.User.UserResponseDto;
 
@@ -21,15 +21,15 @@ public interface UserMapper {
 
     // Mapping AppUser to UserDto
 
-    UserDto appUserToUserDto(AppUser appUser);
+    UserDto appUserToUserDto(Breeder breeder);
 
     // Mapping UserDto to AppUser
 
-    AppUser userDtoToAppUser(UserDto userDto);
+    Breeder userDtoToAppUser(UserDto userDto);
 
     // Mapping AppUser to UserResponseDto with role names
 
-    UserResponseDto appUserToUserResponseDto(AppUser appUser);
+    UserResponseDto appUserToUserResponseDto(Breeder breeder);
 
     // Mapping Role to RoleResponseDto (now extracting the role name correctly)
     default RoleResponseDto roleToRoleResponseDto(Role role) {
