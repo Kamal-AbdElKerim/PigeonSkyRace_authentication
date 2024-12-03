@@ -10,6 +10,7 @@ import java.util.List;
 public interface PigeonRepository extends JpaRepository<Pigeon, Long> {
 
     // Find pigeons by breeder ID
-    List<Pigeon> findByBreederId(Long breederId);  // Adjusting to use JPA's field navigation
+    List<Pigeon> findByBreederId(Long breederId);
+    Pigeon findByRingNumber(Long RingNumber);
 
 }

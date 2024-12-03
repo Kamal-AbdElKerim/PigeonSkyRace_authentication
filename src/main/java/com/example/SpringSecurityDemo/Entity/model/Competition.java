@@ -29,23 +29,20 @@ public class Competition {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // Auto-generated ID for the competition
 
-    @NotBlank
-    @Size(max = 100)
-    @Column(nullable = false, length = 100)
+
     private String name; // Name of the competition
 
     private double latitude;
     private double longitude;
 
-    @NotEmpty
+
     @JsonFormat(pattern = "yy/MM/dd HH:mm:ss")
-    @Column(nullable = false)
+
     private LocalDateTime departureTime;
 
     private int pigeonTotal;
 
-    @NotBlank
-    @Column(nullable = false)
+
     private int percentage;
 
     private int pigeonCount;

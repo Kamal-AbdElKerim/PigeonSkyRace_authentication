@@ -1,11 +1,13 @@
 package com.example.SpringSecurityDemo.Controller;
 
 
+import com.example.SpringSecurityDemo.Entity.ResponseDto;
 import com.example.SpringSecurityDemo.Entity.model.Competition;
 import com.example.SpringSecurityDemo.Entity.model.CompetitionDTO;
 import com.example.SpringSecurityDemo.Service.CompetitionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
@@ -34,10 +36,12 @@ public class CompetitionController {
     @GetMapping("/End-Competition/{competitionid}")
     public ResponseEntity<Object> endCompetition(@PathVariable Long competitionid) {
 
-        String n = competitionService.endCompetition(competitionid);
+        // Calling service method that returns ResponseDto or a String message
+        ResponseEntity<Object> response = competitionService.endCompetition(competitionid);
 
-        return ResponseEntity.ok(n);
+    return response;
     }
+
 //    @GetMapping("GetCompetitionResult")
 //    public ResponseEntity<Object> getCompetitionResult() {
 //

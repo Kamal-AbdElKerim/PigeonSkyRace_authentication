@@ -3,6 +3,7 @@ package com.example.SpringSecurityDemo.Service;
 
 import com.example.SpringSecurityDemo.Entity.User.Breeder;
 import com.example.SpringSecurityDemo.Entity.model.Pigeon;
+import com.example.SpringSecurityDemo.Exception.EntityAlreadyExistsException;
 import com.example.SpringSecurityDemo.Repository.BreederRepository;
 import com.example.SpringSecurityDemo.Repository.PigeonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +27,11 @@ public class PigeonService {
         Breeder breeder = breederRepository.findById(breederId)
                 .orElseThrow(() -> new RuntimeException("Breeder not found"));
 
-        if (pigeonRepository.existsById(pigeon.getRingNumber())) {
-            throw new RuntimeException("Pigeon already used");
+       Pigeon pigeon1 = pigeonRepository.findByRingNumber(pigeon.getRingNumber()) ;
+
+        if (pigeon1 != null) {
+            System.out.println("Pigeon already exists");
+            throw new EntityAlreadyExistsException("Pigeon","Pigeon already used");
         }
 
         pigeon.setBreeder(breeder);

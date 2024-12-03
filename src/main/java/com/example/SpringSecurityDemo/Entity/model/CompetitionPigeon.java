@@ -15,7 +15,6 @@ import java.time.LocalTime;
 @Table(name = "competition_pigeons")
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

@@ -21,7 +21,6 @@ public class Breeder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String userID ;
-    private String name;
     private String username;
     private String nomColombie;
     private String password;
