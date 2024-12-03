@@ -37,6 +37,7 @@ public class AccountService {
         if (otherUser.isPresent()) {
             return generateUserResponseDto(otherUser.get());
         }
+
         return new ResponseEntity<>("Utilisateur non trouvé", HttpStatus.NOT_FOUND);
     }
 
