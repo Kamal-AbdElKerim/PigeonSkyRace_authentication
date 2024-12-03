@@ -17,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
@@ -82,6 +83,30 @@ public class AccountService {
 
         return ResponseEntity.ok(response);
     }
+
+    public Breeder updateUserRoles(Long userID, Set<Long> roleIds) {
+        Breeder breeder = userRepository.findById(userID)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Set<Role> newRoles = new HashSet<>(roleRepository.findAllById(roleIds));
+
+
+        // Log to debug the roles being assigned
+        if (newRoles.isEmpty()) {
+            throw new RuntimeException("Roles not found");
+        }
+
+        // Log the roles being assigned
+        System.out.println("Assigning roles: " + newRoles);
+
+        breeder.setRoles(newRoles);
+
+        return  userRepository.save(breeder);
+
+
+    }
+
+
 
     private String generateUserID(Breeder breeder) {
         return UUID.randomUUID().toString().substring(0, 10) + breeder.getNomColombie().toLowerCase()  + UUID.randomUUID().toString().substring(0, 10);

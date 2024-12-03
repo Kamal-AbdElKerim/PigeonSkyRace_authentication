@@ -1,5 +1,8 @@
 # Application name and server port
 spring:
+
+  main:
+    allow-bean-definition-overriding: true
   application:
     name: Auth
   datasource:
@@ -19,3 +22,5 @@ spring:
 # Server Configuration
 server:
   port: 8081
+
+
