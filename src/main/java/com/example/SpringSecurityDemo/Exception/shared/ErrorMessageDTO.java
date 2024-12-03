@@ -10,7 +10,7 @@ import java.util.Date;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
-public class ErrorMessage {
+public class ErrorMessageDTO {
     String message;
     Date timestamp;
     Integer code;

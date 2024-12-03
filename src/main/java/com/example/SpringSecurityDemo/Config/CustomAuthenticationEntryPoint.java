@@ -1,6 +1,6 @@
 package com.example.SpringSecurityDemo.Config;
 
-import com.example.SpringSecurityDemo.Exception.shared.ErrorMessage;
+import com.example.SpringSecurityDemo.Exception.shared.ErrorMessageDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,13 +27,13 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
 
 
-        ErrorMessage errorMessage = ErrorMessage.builder()
+        ErrorMessageDTO errorMessageDTO = ErrorMessageDTO.builder()
                 .message("Authentication failed: Invalid email or password.")
                 .timestamp(new Date())
                 .code(HttpServletResponse.SC_UNAUTHORIZED)
                 .build();
 
-        String jsonResponse = objectMapper.writeValueAsString(errorMessage);
+        String jsonResponse = objectMapper.writeValueAsString(errorMessageDTO);
 
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
@@ -42,14 +42,14 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
     public void handleAccessDeniedException(HttpServletRequest request, HttpServletResponse response, AccessDeniedException ex) throws IOException {
         // Custom error message for Forbidden
-        ErrorMessage errorMessage = ErrorMessage.builder()
+        ErrorMessageDTO errorMessageDTO = ErrorMessageDTO.builder()
                 .message("Access denied: You do not have permission to access this resource.")
                 .timestamp(new Date())
                 .code(HttpServletResponse.SC_FORBIDDEN)  // 403 Status code
                 .build();
 
         // Serialize ErrorMessage to JSON
-        String jsonResponse = objectMapper.writeValueAsString(errorMessage);
+        String jsonResponse = objectMapper.writeValueAsString(errorMessageDTO);
 
         // Send the response as JSON with the custom error message
         response.setStatus(HttpServletResponse.SC_FORBIDDEN); // 403 status code

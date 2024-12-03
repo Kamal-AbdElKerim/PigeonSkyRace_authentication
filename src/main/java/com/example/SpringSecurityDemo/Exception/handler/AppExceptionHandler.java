@@ -6,11 +6,10 @@ package com.example.SpringSecurityDemo.Exception.handler;
 import com.example.SpringSecurityDemo.Exception.EntityAlreadyExistsException;
 import com.example.SpringSecurityDemo.Exception.EntityNotFoundException;
 import com.example.SpringSecurityDemo.Exception.ValidationException;
-import com.example.SpringSecurityDemo.Exception.shared.ErrorMessage;
+import com.example.SpringSecurityDemo.Exception.shared.ErrorMessageDTO;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -25,12 +24,12 @@ public class AppExceptionHandler {
 
     @ExceptionHandler(value = {EntityNotFoundException.class})
     public ResponseEntity<Object> entityNotFoundException(EntityNotFoundException ex) {
-        ErrorMessage errorMessage = ErrorMessage.builder()
+        ErrorMessageDTO errorMessageDTO = ErrorMessageDTO.builder()
                 .message(ex.getMessage())
                 .timestamp(new Date())
                 .code(404)
                 .build();
-        return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(errorMessageDTO, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
@@ -44,12 +43,12 @@ public class AppExceptionHandler {
 
     @ExceptionHandler(value = {EntityAlreadyExistsException.class})
     public ResponseEntity<Object> entityAlreadyExistsException(EntityAlreadyExistsException ex) {
-        ErrorMessage errorMessage = ErrorMessage.builder()
+        ErrorMessageDTO errorMessageDTO = ErrorMessageDTO.builder()
                 .message(ex.getMessage())
                 .timestamp(new Date())
                 .code(409)
                 .build();
-        return new ResponseEntity<>(errorMessage, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(errorMessageDTO, HttpStatus.CONFLICT);
     }
 
 
@@ -67,12 +66,12 @@ public class AppExceptionHandler {
     public ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException ex) {
         // Custom error message for bad credentials
         System.out.println("dd");
-        ErrorMessage errorMessage = ErrorMessage.builder()
+        ErrorMessageDTO errorMessageDTO = ErrorMessageDTO.builder()
                 .message("Authentication failed: Invalid email or password.")
                 .timestamp(new Date())
                 .code(HttpStatus.UNAUTHORIZED.value()) // Set status to 401 (Unauthorized)
                 .build();
-        return new ResponseEntity<>(errorMessage, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(errorMessageDTO, HttpStatus.UNAUTHORIZED);
     }
 
 

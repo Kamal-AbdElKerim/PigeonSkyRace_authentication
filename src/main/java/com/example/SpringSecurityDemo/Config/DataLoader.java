@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Set;
+import java.util.UUID;
 
 @Configuration
 public class DataLoader {
@@ -32,6 +33,7 @@ public class DataLoader {
                     adminUser.setName("Admin User");
                     adminUser.setUsername("admin");
                     adminUser.setEmail("admin@example.com");
+                    adminUser.setUserID(generateUserID(adminUser));
                     adminUser.setPassword(passwordEncoder.encode("admin123"));
 
                     adminUser.setRoles(Set.of(adminRole)); // Attach admin role
@@ -44,6 +46,7 @@ public class DataLoader {
                     normalUser.setName("Normal User");
                     normalUser.setUsername("user");
                     normalUser.setEmail("user@example.com");
+                    normalUser.setUserID(generateUserID(normalUser));
                     normalUser.setPassword(passwordEncoder.encode("user123"));
 
                     normalUser.setRoles(Set.of(userRole)); // Attach user role
@@ -56,6 +59,7 @@ public class DataLoader {
                     organizerUser.setName("Organizer User");
                     organizerUser.setUsername("organizer");
                     organizerUser.setEmail("organizer@example.com");
+                    organizerUser.setUserID(generateUserID(organizerUser));
                     organizerUser.setPassword(passwordEncoder.encode("organizer123"));
 
                     organizerUser.setRoles(Set.of(organizerRole)); // Attach organizer role
@@ -66,7 +70,9 @@ public class DataLoader {
             };
         }
 
-
+    private String generateUserID(AppUser appUser) {
+        return UUID.randomUUID().toString().substring(0, 10) + appUser.getEmail().toLowerCase()  + UUID.randomUUID().toString().substring(0, 10);
+    }
 
 
 }

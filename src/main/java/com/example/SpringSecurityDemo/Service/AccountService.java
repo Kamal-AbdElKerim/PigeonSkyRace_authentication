@@ -10,8 +10,10 @@ import com.example.SpringSecurityDemo.Exception.EntityAlreadyExistsException;
 import com.example.SpringSecurityDemo.Repository.AppUserRepository;
 import com.example.SpringSecurityDemo.Repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.*;
@@ -24,26 +26,19 @@ public class AccountService {
     private final AppUserRepository userRepository;
     private final RoleRepository roleRepository;
     private final UserMapper userMapper;
-    private final AuthenticationManager authenticationManager;
 
 
-//    public ResponseEntity<Object> Login(LoginDto loginDto){
-//        // Authenticate the user
-//        Authentication authentication = authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword())
-//        );
-//        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-//
-//        // You can access the roles here
-//        for (GrantedAuthority authority : authorities) {
-//            System.out.println("Role: " + authority.getAuthority());
-//        }
-//
-//        AppUser user = userRepository.findByEmail(loginDto.getEmail())
-//                .orElseThrow(() -> new EntityNotFoundException("User", "User not found with email: " + loginDto.getEmail()));
-//        return generateUserResponseDto(user);
-//
-//    }
+
+    public ResponseEntity<Object> InfoAuth(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Optional<AppUser> otherUser = Optional.ofNullable(userRepository.findByEmail(authentication.getName()));
+
+        if (otherUser.isPresent()) {
+            return generateUserResponseDto(otherUser.get());
+        }
+        return new ResponseEntity<>("Utilisateur non trouvé", HttpStatus.NOT_FOUND);
+    }
 
     public ResponseEntity<Object> createUser(UserDto userDto){
         var bCryptEncoder = new BCryptPasswordEncoder();
@@ -90,8 +85,29 @@ public class AccountService {
     }
 
     private String generateUserID(AppUser appUser) {
-        // For example, you can combine the username and UUID to generate a userID
         return UUID.randomUUID().toString().substring(0, 10) + appUser.getEmail().toLowerCase()  + UUID.randomUUID().toString().substring(0, 10);
     }
+
+
+
+
+
+    //    public ResponseEntity<Object> Login(LoginDto loginDto){
+//        // Authenticate the user
+//        Authentication authentication = authenticationManager.authenticate(
+//                new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword())
+//        );
+//        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+//
+//        // You can access the roles here
+//        for (GrantedAuthority authority : authorities) {
+//            System.out.println("Role: " + authority.getAuthority());
+//        }
+//
+//        AppUser user = userRepository.findByEmail(loginDto.getEmail())
+//                .orElseThrow(() -> new EntityNotFoundException("User", "User not found with email: " + loginDto.getEmail()));
+//        return generateUserResponseDto(user);
+//
+//    }
 
 }

@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Data
-public class EmployeeDetailsService implements UserDetailsService {
+public class UsersDetailsService implements UserDetailsService {
 
     @Autowired
     private AppUserRepository appUserRepository;
@@ -29,8 +29,8 @@ public class EmployeeDetailsService implements UserDetailsService {
                 .collect(Collectors.toSet());
 
         return new org.springframework.security.core.userdetails.User(
-                appUser.getEmail(),  // Username (email in this case)
-                appUser.getPassword(),  // Password (already encoded in DB)
+                appUser.getEmail(),
+                appUser.getPassword(),
                 authorities
         );
 
