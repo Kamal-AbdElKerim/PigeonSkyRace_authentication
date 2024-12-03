@@ -11,6 +11,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.FileOutputStream;
@@ -41,6 +43,9 @@ public class CompetitionService {
         competition.setPercentage(competitionDTO.getPercentage());
         competition.setStatus(true);
         competition.setStarted(false);
+
+        System.out.println(competitionDTO.getDepartureTime());
+        System.out.println(competition.getDepartureTime());
 
         // Save the competition to the database
         competitionRepository.save(competition);
@@ -74,23 +79,26 @@ public class CompetitionService {
       return   competitionRepository.findById(competitionId).orElseThrow(() -> new RuntimeException("Competition not found"));
     }
 
-    public String endCompetition(Long competitionId) {
+    public ResponseEntity<Object> endCompetition(Long competitionId) {
 
         Optional<Competition> competitionOpt = competitionRepository.findById(competitionId);
 
+        System.out.println("d");
         if (competitionOpt.isPresent()) {
-
             Competition competition = competitionOpt.get();
-
+            System.out.println("find");
             competition.setStatus(false);
             competition.setStarted(false);
             competitionRepository.save(competition);
 
             this.calculateResult(competitionId);
-            return "Updated seccseflly";
+
+            // Returning a success response
+            return ResponseEntity.status(HttpStatus.OK).body("Competition ended successfully");
         }
 
-        return "No competition found";
+        // Returning a failure response with NOT_FOUND status
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No competition found");
     }
 
     public long calculateTotalSeconds(CompetitionPigeon competitionPigeon, Competition competition) {

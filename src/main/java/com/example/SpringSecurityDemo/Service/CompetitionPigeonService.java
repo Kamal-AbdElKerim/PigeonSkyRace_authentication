@@ -4,6 +4,7 @@ package com.example.SpringSecurityDemo.Service;
 import com.example.SpringSecurityDemo.Entity.model.Competition;
 import com.example.SpringSecurityDemo.Entity.model.CompetitionPigeon;
 import com.example.SpringSecurityDemo.Entity.model.Pigeon;
+import com.example.SpringSecurityDemo.Exception.EntityNotFoundException;
 import com.example.SpringSecurityDemo.Repository.CompetitionPigeonRepository;
 import com.example.SpringSecurityDemo.Repository.CompetitionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,15 @@ public class CompetitionPigeonService {
 
     public void addPigeonToCompetition( CompetitionPigeon competitionPigeon) {
 
-        Competition competition = competitionRepository.findById(competitionPigeon.getCompetition().getId()).orElseThrow();
+        Competition competition = competitionRepository.findById(competitionPigeon.getCompetition().getId())
+                .orElseThrow(() -> new EntityNotFoundException("Competition","Competition not found with ID: "
+                        + competitionPigeon.getCompetition().getId()));
+
         Pigeon pigeon = pigeonService.findById(competitionPigeon.getPigeon().getRingNumber());
+        if (pigeon == null) {
+            throw new EntityNotFoundException("pigeon","Pigeon not found with ring number: "
+                    + competitionPigeon.getPigeon().getRingNumber());
+        }
 
         competitionPigeon.setCompetition(competition);
         competitionPigeon.setPigeon(pigeon);

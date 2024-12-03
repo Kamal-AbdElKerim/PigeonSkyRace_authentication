@@ -17,6 +17,7 @@ public class UserResponseDto {
     private String username;
     private String nomColombie;
     private Set<RoleResponseDto> roles;
-
+    private double latitude; // GPS coordinates
+    private double longitude;
     private List<PigeonResponseDto> pigeons;
 }

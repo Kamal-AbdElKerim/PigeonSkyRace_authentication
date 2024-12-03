@@ -29,7 +29,8 @@ public class UserDto {
     )
     private String nomColombie;
 
-
+    private double latitude; // GPS coordinates
+    private double longitude;
 
 
 

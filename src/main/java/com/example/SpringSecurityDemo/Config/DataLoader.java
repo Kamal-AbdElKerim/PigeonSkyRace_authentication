@@ -30,7 +30,6 @@ public class DataLoader {
                 // Save Admin user
                 if (userRepository.findByUsername("admin").isEmpty()) {
                     Breeder adminUser = new Breeder();
-                    adminUser.setName("Admin User");
                     adminUser.setUsername("admin");
                     adminUser.setNomColombie("Admin");
                     adminUser.setUserID(generateUserID(adminUser));
@@ -43,7 +42,6 @@ public class DataLoader {
                 // Save Normal User
                 if (userRepository.findByUsername("user").isEmpty()) {
                     Breeder normalUser = new Breeder();
-                    normalUser.setName("Normal User");
                     normalUser.setUsername("user");
                     normalUser.setNomColombie("User");
                     normalUser.setUserID(generateUserID(normalUser));
@@ -56,7 +54,6 @@ public class DataLoader {
                 // Save Organizer User
                 if (userRepository.findByUsername("organizer").isEmpty()) {
                     Breeder organizerUser = new Breeder();
-                    organizerUser.setName("Organizer User");
                     organizerUser.setUsername("organizer");
                     organizerUser.setNomColombie("Organizer");
                     organizerUser.setUserID(generateUserID(organizerUser));
