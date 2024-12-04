@@ -5,6 +5,8 @@ import com.example.SpringSecurityDemo.Entity.User.Breeder;
 import com.example.SpringSecurityDemo.Entity.model.BreederDto;
 import com.example.SpringSecurityDemo.Entity.model.Pigeon;
 import com.example.SpringSecurityDemo.Entity.model.PigeonResponseDto;
+import com.example.SpringSecurityDemo.Exception.EntityAlreadyExistsException;
+import com.example.SpringSecurityDemo.Exception.EntityNotFoundException;
 import com.example.SpringSecurityDemo.Repository.BreederRepository;
 import com.example.SpringSecurityDemo.Service.PigeonService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -25,34 +28,37 @@ import java.util.Optional;
 @RequestMapping("/Api/pigeons")
 public class PigeonController {
 
-    @Autowired
-    private PigeonService pigeonService;
+
+    private final PigeonService pigeonService;
 
 
     private final BreederRepository userRepository;
 
-    @Autowired
-    private PigeonResponseDto pigeonDto ;
+
+    private final PigeonResponseDto pigeonDto ;
 
     // Add a new pigeon
     @PostMapping()
     public ResponseEntity<Pigeon> addPigeon(
-            @RequestHeader("Authorization") String authorizationHeader,
+
             @RequestBody Pigeon pigeon) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (getAuthenticatedBreeder().isPresent()) {
 
-        Optional<Breeder> otherUser = Optional.ofNullable(userRepository.findByNomColombie(authentication.getName()));
-
-        if (otherUser.isPresent()) {
-
-        Pigeon savedPigeon = pigeonService.addPigeon(otherUser.get().getId(), pigeon);
+        Pigeon savedPigeon = pigeonService.addPigeon(getAuthenticatedBreeder().get().getId(), pigeon);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedPigeon);
         }
 
        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
     }
 
+    public Optional<Breeder> getAuthenticatedBreeder() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(userRepository.findByNomColombie(authentication.getName()));
+    }
 
 
     @GetMapping("/{pigeonId}")
@@ -60,11 +66,30 @@ public class PigeonController {
         Optional<Pigeon> pigeonOpt = pigeonService.getPigeonByRingNumber(pigeonId);
 
         if (pigeonOpt.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            throw new EntityNotFoundException("pigeonId", "Pigeon ID not found");
         }
 
         Pigeon pigeon = pigeonOpt.get();
+        Optional<Breeder> authenticatedBreederOpt = getAuthenticatedBreeder();
 
+        if (authenticatedBreederOpt.isEmpty()) {
+            throw new EntityNotFoundException("authenticated","You are not authenticated.");
+        }
+
+        Breeder authenticatedBreeder = authenticatedBreederOpt.get();
+
+        boolean isAdmin = authenticatedBreeder.getRoles().stream()
+                .anyMatch(role -> "ROLE_ADMIN".equals(role.getName()));
+
+        if (!isAdmin) {
+            if (pigeon.getBreeder() == null ||
+                    !authenticatedBreeder.getNomColombie().equals(pigeon.getBreeder().getNomColombie())) {
+                throw new EntityNotFoundException("NomColombie", "This pigeon is not yours.");
+            }
+        }
+
+        // Prepare the response DTO
+        PigeonResponseDto pigeonDto = new PigeonResponseDto();
         BeanUtils.copyProperties(pigeon, pigeonDto);
 
         Breeder breeder = pigeon.getBreeder();
@@ -79,7 +104,10 @@ public class PigeonController {
 
 
 
+
+
     // Get all pigeons
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public List<PigeonResponseDto> getAllPigeons() {
         List<Pigeon> pigeons = pigeonService.getAllPigeons();
@@ -106,7 +134,30 @@ public class PigeonController {
 
     // Delete a pigeon by ring number
     @DeleteMapping("/{ringNumber}")
-    public void deletePigeon(@PathVariable Long ringNumber) {
+    public ResponseEntity<Void> deletePigeon(@PathVariable Long ringNumber) {
+        Optional<Pigeon> pigeonOpt = pigeonService.getPigeonByRingNumber(ringNumber);
+
+        if (pigeonOpt.isEmpty()) {
+            throw new EntityNotFoundException("Pigeon", "No pigeon found with ring number: " + ringNumber);
+        }
+
+        Pigeon pigeon = pigeonOpt.get();
+        Optional<Breeder> authenticatedBreederOpt = getAuthenticatedBreeder();
+
+        boolean isAdmin = authenticatedBreederOpt.get().getRoles().stream()
+                .anyMatch(role -> "ROLE_ADMIN".equals(role.getName()));
+
+        if (!isAdmin) {
+            if (authenticatedBreederOpt.isEmpty() ||
+                    pigeon.getBreeder() == null ||
+                    !authenticatedBreederOpt.get().getNomColombie().equals(pigeon.getBreeder().getNomColombie())) {
+                throw new EntityNotFoundException("authorized", "You are not authorized to delete this pigeon.");
+            }
+        }
+
         pigeonService.deletePigeon(ringNumber);
+
+        return ResponseEntity.noContent().build(); // Returns 204 No Content for successful deletion
     }
+
 }

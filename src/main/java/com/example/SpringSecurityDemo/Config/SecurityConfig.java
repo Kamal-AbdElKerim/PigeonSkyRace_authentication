@@ -28,10 +28,9 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> {
                     authorize.requestMatchers("/account/register").permitAll();
-                    authorize.requestMatchers("/Api/pigeons/**").hasRole("USER");
-                    authorize.requestMatchers("/Api/breeders/**").hasRole("ADMIN");
-                    authorize.requestMatchers("/account/users/{userId}/roles").hasRole("ADMIN");
-                    authorize.requestMatchers("/Api/Competition/**" , "/Api/CompetitionPigeon/**").hasRole("ORGANIZER");
+                    authorize.requestMatchers("/Api/pigeons/**", "/Api/breeders/{breederId}" , "/account/current-user").hasAnyRole("USER", "ADMIN");
+                    authorize.requestMatchers("/Api/breeders/**","/account/users/{userId}/roles").hasRole("ADMIN");
+                    authorize.requestMatchers("/Api/Competition/**" , "/Api/CompetitionPigeon/**" , "/account/current-user").hasRole("ORGANIZER");
                     authorize.anyRequest().authenticated();
                 })
                 .exceptionHandling(exceptionHandling -> exceptionHandling
