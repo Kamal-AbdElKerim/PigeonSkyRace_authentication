@@ -1,6 +1,7 @@
 # Application name and server port
 spring:
-
+  profiles:
+    active: test
   main:
     allow-bean-definition-overriding: true
   application:

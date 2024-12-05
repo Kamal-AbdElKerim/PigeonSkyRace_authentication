@@ -24,11 +24,11 @@ import java.util.Optional;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/Api/CompetitionPigeon")
+
 public class CompetitionPigeonController {
 
 
-    @Autowired
-    private ICompetitionPigeonService competitionPigeonService;
+    private final ICompetitionPigeonService competitionPigeonService;
 
     private final BreederRepository userRepository;
 
