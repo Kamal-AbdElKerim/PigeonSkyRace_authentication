@@ -6,13 +6,14 @@ import com.example.SpringSecurityDemo.Entity.model.Pigeon;
 import com.example.SpringSecurityDemo.Exception.EntityAlreadyExistsException;
 import com.example.SpringSecurityDemo.Repository.BreederRepository;
 import com.example.SpringSecurityDemo.Repository.PigeonRepository;
+import com.example.SpringSecurityDemo.interfacee.PigeonServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PigeonService {
+public class PigeonService implements PigeonServiceInterface {
 
     @Autowired
     private PigeonRepository pigeonRepository;
@@ -21,7 +22,7 @@ public class PigeonService {
     @Autowired
     private BreederRepository breederRepository;
 
-    // Add a new pigeon
+    @Override
     public Pigeon addPigeon(Long breederId, Pigeon pigeon) {
         // Find the breeder by ID
         Breeder breeder = breederRepository.findById(breederId)
@@ -40,25 +41,25 @@ public class PigeonService {
     }
 
 
-    // Get all pigeons
+    @Override
     public List<Pigeon> getAllPigeons() {
         return pigeonRepository.findAll();
     }
 
-    // Find pigeon by ring number
+    @Override
     public Optional<Pigeon> getPigeonByRingNumber(Long ringNumber) {
         return pigeonRepository.findById(ringNumber);
     }
 
-    // Delete a pigeon by ring number
+    @Override
     public void deletePigeon(Long ringNumber) {
         pigeonRepository.deleteById(ringNumber);
     }
-
+    @Override
     public List<Pigeon> findByBreederId(Long breederId) {
         return pigeonRepository.findByBreederId(breederId);
     }
-
+    @Override
     public  Pigeon findById(Long id) {
         return pigeonRepository.findById(id).orElse(null);
     }

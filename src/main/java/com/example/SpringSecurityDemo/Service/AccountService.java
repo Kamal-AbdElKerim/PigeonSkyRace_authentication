@@ -9,6 +9,7 @@ import com.example.SpringSecurityDemo.Entity.User.UserResponseDto;
 import com.example.SpringSecurityDemo.Exception.EntityAlreadyExistsException;
 import com.example.SpringSecurityDemo.Repository.BreederRepository;
 import com.example.SpringSecurityDemo.Repository.RoleRepository;
+import com.example.SpringSecurityDemo.interfacee.IAccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,14 +22,14 @@ import java.util.*;
 
 @RequiredArgsConstructor
 @Service
-public class AccountService {
+public class AccountService implements IAccountService {
 
     private final BreederRepository userRepository;
     private final RoleRepository roleRepository;
     private final UserMapper userMapper;
 
 
-
+    @Override
     public ResponseEntity<Object> InfoAuth(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -40,7 +41,7 @@ public class AccountService {
 
         return new ResponseEntity<>("Utilisateur non trouvé", HttpStatus.NOT_FOUND);
     }
-
+    @Override
     public ResponseEntity<Object> createUser(UserDto userDto){
         var bCryptEncoder = new BCryptPasswordEncoder();
 
@@ -82,7 +83,7 @@ public class AccountService {
 
         return ResponseEntity.ok(response);
     }
-
+    @Override
     public Breeder updateUserRoles(Long userID, Set<Long> roleIds) {
         Breeder breeder = userRepository.findById(userID)
                 .orElseThrow(() -> new RuntimeException("User not found"));

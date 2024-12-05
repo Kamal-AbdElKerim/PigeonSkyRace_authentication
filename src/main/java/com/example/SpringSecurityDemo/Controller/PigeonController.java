@@ -9,6 +9,7 @@ import com.example.SpringSecurityDemo.Exception.EntityAlreadyExistsException;
 import com.example.SpringSecurityDemo.Exception.EntityNotFoundException;
 import com.example.SpringSecurityDemo.Repository.BreederRepository;
 import com.example.SpringSecurityDemo.Service.PigeonService;
+import com.example.SpringSecurityDemo.interfacee.PigeonServiceInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ import java.util.Optional;
 public class PigeonController {
 
 
-    private final PigeonService pigeonService;
+    private final PigeonServiceInterface pigeonService;
 
 
     private final BreederRepository userRepository;

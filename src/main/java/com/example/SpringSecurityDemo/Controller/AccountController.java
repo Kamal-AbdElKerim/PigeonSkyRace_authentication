@@ -6,6 +6,7 @@ import com.example.SpringSecurityDemo.Entity.Role.RoleUpdateRequest;
 import com.example.SpringSecurityDemo.Entity.User.Breeder;
 import com.example.SpringSecurityDemo.Entity.User.UserDto;
 import com.example.SpringSecurityDemo.Service.AccountService;
+import com.example.SpringSecurityDemo.interfacee.IAccountService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ import java.util.Set;
 @RequestMapping("/account")
 public class AccountController {
 
-    private final AccountService accountService;
+    private final IAccountService accountService;
 
     @GetMapping("/current-user")
     public ResponseEntity<Object> getCurrentUser() {

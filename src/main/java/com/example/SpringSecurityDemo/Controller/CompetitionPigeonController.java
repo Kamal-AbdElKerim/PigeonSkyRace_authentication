@@ -6,6 +6,7 @@ import com.example.SpringSecurityDemo.Entity.model.CompetitionPigeon;
 import com.example.SpringSecurityDemo.Entity.model.EndTimeRequest;
 import com.example.SpringSecurityDemo.Repository.BreederRepository;
 import com.example.SpringSecurityDemo.Service.CompetitionPigeonService;
+import com.example.SpringSecurityDemo.interfacee.ICompetitionPigeonService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -27,7 +28,7 @@ public class CompetitionPigeonController {
 
 
     @Autowired
-    private CompetitionPigeonService competitionPigeonService;
+    private ICompetitionPigeonService competitionPigeonService;
 
     private final BreederRepository userRepository;
 

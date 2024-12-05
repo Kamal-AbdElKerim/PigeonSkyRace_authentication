@@ -5,6 +5,7 @@ import com.example.SpringSecurityDemo.Entity.User.Breeder;
 import com.example.SpringSecurityDemo.Entity.model.Pigeon;
 import com.example.SpringSecurityDemo.Service.BreederService;
 import com.example.SpringSecurityDemo.Service.PigeonService;
+import com.example.SpringSecurityDemo.interfacee.IBreederService;
 import lombok.RequiredArgsConstructor;
     import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class BreederController {
 
 
 
-  private final BreederService breederService ;
+  private final IBreederService breederService ;
 
 
     private final  PigeonService pigeonService ;

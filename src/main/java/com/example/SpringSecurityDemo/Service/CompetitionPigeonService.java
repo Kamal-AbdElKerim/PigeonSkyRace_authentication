@@ -7,6 +7,7 @@ import com.example.SpringSecurityDemo.Entity.model.Pigeon;
 import com.example.SpringSecurityDemo.Exception.EntityNotFoundException;
 import com.example.SpringSecurityDemo.Repository.CompetitionPigeonRepository;
 import com.example.SpringSecurityDemo.Repository.CompetitionRepository;
+import com.example.SpringSecurityDemo.interfacee.ICompetitionPigeonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,7 @@ import java.time.LocalTime;
 import java.util.*;
 
 @Service
-public class CompetitionPigeonService {
+public class CompetitionPigeonService implements ICompetitionPigeonService {
 
     @Autowired
     private CompetitionRepository competitionRepository;
@@ -30,7 +31,7 @@ public class CompetitionPigeonService {
     private CompetitionService competitionService;
 
 
-
+@Override
     public void addPigeonToCompetition( CompetitionPigeon competitionPigeon) {
 
         Competition competition = competitionRepository.findById(competitionPigeon.getCompetition().getId())
@@ -68,11 +69,11 @@ public class CompetitionPigeonService {
         return R * c;
     }
 
-
+    @Override
     public List<CompetitionPigeon> getAllPigeonEtCompetition() {
         return competitionPigeonRepository.findAll();
     }
-
+    @Override
     public int getCountPigeonToCompetition(Long competitionId) {
         List<CompetitionPigeon> competitionPigeons = competitionPigeonRepository.findByCompetitionId(competitionId);
 
@@ -87,7 +88,7 @@ public class CompetitionPigeonService {
         return uniquePigeons.size();
     }
 
-
+    @Override
     public void StartCompetition(Long competitionId) {
         double totalLat = 0;
         double totalLon = 0;
@@ -147,7 +148,7 @@ public class CompetitionPigeonService {
         competitionRepository.save(competition);
 
     }
-
+    @Override
     public int calculatePigeonCount(Long competitionId, int totalPigeon) {
         Competition competition = competitionRepository.findById(competitionId)
                 .orElseThrow(() -> new RuntimeException("Competition not found"));
@@ -161,7 +162,7 @@ public class CompetitionPigeonService {
     }
 
 
-    // Method to update EndTime
+    @Override
     public String updateEndTime(Long breederId, Long ringNumber, LocalTime endTime) {
         CompetitionPigeon competitionPigeonOpt = competitionPigeonRepository.findByPigeon_RingNumber(ringNumber);
         System.out.println("Found CompetitionPigeons: " + competitionPigeonOpt);
@@ -180,7 +181,7 @@ public class CompetitionPigeonService {
 
     }
 
-
+    @Override
     public void EndCompetition(Long competitionId) {
 
 

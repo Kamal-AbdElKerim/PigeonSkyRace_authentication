@@ -6,6 +6,7 @@ import com.example.SpringSecurityDemo.Entity.model.CompetitionDTO;
 import com.example.SpringSecurityDemo.Entity.model.CompetitionPigeon;
 import com.example.SpringSecurityDemo.Repository.CompetitionPigeonRepository;
 import com.example.SpringSecurityDemo.Repository.CompetitionRepository;
+import com.example.SpringSecurityDemo.interfacee.CompetitionServiceInterface;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -22,7 +23,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-public class CompetitionService {
+public class CompetitionService implements CompetitionServiceInterface {
 
     @Autowired
     private CompetitionRepository competitionRepository;
@@ -34,7 +35,7 @@ public class CompetitionService {
 
 
 
-    // Method to add a new competition
+    @Override
     public Competition addCompetition(CompetitionDTO competitionDTO) {
         // Convert CompetitionDTO to Competition entity
         Competition competition = new Competition();
@@ -51,11 +52,12 @@ public class CompetitionService {
         competitionRepository.save(competition);
         return competition ;
     }
+    @Override
     public List<Competition> fetchCompetition() {
         return competitionRepository.findAll();
     }
 
-
+    @Override
     public void updateCompetition(Long competitionId, double latitude , double longitude , int TotalPigeon , int PigeonCount) {
 
         Competition existingCompetition = competitionRepository.findById(competitionId)
@@ -70,15 +72,15 @@ public class CompetitionService {
         competitionRepository.save(existingCompetition);
         System.out.println("competitionRepository.save(existingCompetition)" + competitionRepository.save(existingCompetition));
     }
-
+    @Override
     public void updateCompetition(Competition competition) {
         competitionRepository.save(competition);
     }
-
+    @Override
     public Competition getCompetitionByid(Long competitionId) {
       return   competitionRepository.findById(competitionId).orElseThrow(() -> new RuntimeException("Competition not found"));
     }
-
+    @Override
     public ResponseEntity<Object> endCompetition(Long competitionId) {
 
         Optional<Competition> competitionOpt = competitionRepository.findById(competitionId);
@@ -176,6 +178,7 @@ public class CompetitionService {
         }
 
     }
+
     public void GeneratePDF(List<CompetitionPigeon> competitionPigeons) throws IOException {
         // Create a new workbook
         Workbook workbook = new XSSFWorkbook();

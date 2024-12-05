@@ -5,6 +5,7 @@ import com.example.SpringSecurityDemo.Entity.ResponseDto;
 import com.example.SpringSecurityDemo.Entity.model.Competition;
 import com.example.SpringSecurityDemo.Entity.model.CompetitionDTO;
 import com.example.SpringSecurityDemo.Service.CompetitionService;
+import com.example.SpringSecurityDemo.interfacee.CompetitionServiceInterface;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,7 @@ import java.util.Optional;
 public class CompetitionController {
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionServiceInterface competitionService;
 
     @GetMapping()
     public List<Competition> getCompetition() {
@@ -37,9 +38,8 @@ public class CompetitionController {
     public ResponseEntity<Object> endCompetition(@PathVariable Long competitionid) {
 
         // Calling service method that returns ResponseDto or a String message
-        ResponseEntity<Object> response = competitionService.endCompetition(competitionid);
 
-    return response;
+        return competitionService.endCompetition(competitionid);
     }
 
 //    @GetMapping("GetCompetitionResult")
