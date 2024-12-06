@@ -1,8 +1,9 @@
-package com.example.SpringSecurityDemo.Config;
+package com.example.SpringSecurityDemo.Service;
 
 import com.example.SpringSecurityDemo.Entity.User.Breeder;
 import com.example.SpringSecurityDemo.Repository.BreederRepository;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,10 +16,11 @@ import java.util.stream.Collectors;
 
 @Service
 @Data
+@RequiredArgsConstructor
 public class UsersDetailsService implements UserDetailsService {
 
-    @Autowired
-    private BreederRepository breederRepository;
+
+    private final BreederRepository breederRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

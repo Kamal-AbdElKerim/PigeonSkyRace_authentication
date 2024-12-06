@@ -7,6 +7,7 @@ import com.example.SpringSecurityDemo.Entity.User.Breeder;
 import com.example.SpringSecurityDemo.Entity.User.UserDto;
 import com.example.SpringSecurityDemo.Entity.User.UserResponseDto;
 import com.example.SpringSecurityDemo.Exception.EntityAlreadyExistsException;
+import com.example.SpringSecurityDemo.Exception.EntityNotFoundException;
 import com.example.SpringSecurityDemo.Repository.BreederRepository;
 import com.example.SpringSecurityDemo.Repository.RoleRepository;
 import com.example.SpringSecurityDemo.interfacee.IAccountService;
@@ -47,8 +48,6 @@ public class AccountService implements IAccountService {
 
         Breeder appuser = userMapper.userDtoToAppUser(userDto);
 
-
-
         Optional<Breeder> otherUser = Optional.ofNullable(userRepository.findByNomColombie(userDto.getNomColombie()));
 
         if (otherUser.isPresent()) {
@@ -69,33 +68,22 @@ public class AccountService implements IAccountService {
         return generateUserResponseDto(appuser);
     }
 
-    private ResponseEntity<Object> generateUserResponseDto(Breeder breeder) {
-        // Generate JWT token
-     //   String jwtToken = securityConfiguration.createJwtToken(appUser);
 
-        // Map AppUser to UserResponseDto
-        UserResponseDto userResponseDto = userMapper.appUserToUserResponseDto(breeder);
-
-        // Prepare response
-        var response = new HashMap<String, Object>();
-     //   response.put("token", jwtToken);
-        response.put("user", userResponseDto);
-
-        return ResponseEntity.ok(response);
-    }
     @Override
     public Breeder updateUserRoles(Long userID, Set<Long> roleIds) {
+        System.out.println("les id"+roleIds);
         Breeder breeder = userRepository.findById(userID)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Set<Role> newRoles = new HashSet<>(roleRepository.findAllById(roleIds));
+        List<Role> roles =  roleRepository.findAllById(roleIds);
 
+        Set<Role> newRoles = new HashSet<>(roles);
+
+        System.out.println("roles: " + newRoles);
 
         if (newRoles.isEmpty()) {
-            throw new RuntimeException("Roles not found");
+            throw new EntityNotFoundException("Roles","Roles not found");
         }
-
-        System.out.println("Assigning roles: " + newRoles);
 
         breeder.setRoles(newRoles);
 
@@ -104,7 +92,20 @@ public class AccountService implements IAccountService {
 
     }
 
+    private ResponseEntity<Object> generateUserResponseDto(Breeder breeder) {
+        // Generate JWT token
+        //   String jwtToken = securityConfiguration.createJwtToken(appUser);
 
+        // Map AppUser to UserResponseDto
+        UserResponseDto userResponseDto = userMapper.appUserToUserResponseDto(breeder);
+
+        // Prepare response
+        var response = new HashMap<String, Object>();
+        //   response.put("token", jwtToken);
+        response.put("user", userResponseDto);
+
+        return ResponseEntity.ok(response);
+    }
 
     private String generateUserID(Breeder breeder) {
         return UUID.randomUUID().toString().substring(0, 10) + breeder.getNomColombie().toLowerCase()  + UUID.randomUUID().toString().substring(0, 10);
