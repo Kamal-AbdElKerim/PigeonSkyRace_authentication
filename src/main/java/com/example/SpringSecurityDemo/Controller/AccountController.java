@@ -4,6 +4,7 @@ package com.example.SpringSecurityDemo.Controller;
 
 import com.example.SpringSecurityDemo.Entity.Role.RoleUpdateRequest;
 import com.example.SpringSecurityDemo.Entity.User.Breeder;
+import com.example.SpringSecurityDemo.Entity.User.LoginDto;
 import com.example.SpringSecurityDemo.Entity.User.UserDto;
 import com.example.SpringSecurityDemo.Service.AccountService;
 import com.example.SpringSecurityDemo.interfacee.IAccountService;
@@ -42,14 +43,10 @@ public class AccountController {
     }
 
 
-
-
-
-
-//    @PostMapping("/login")
-//    public ResponseEntity<Object> login(
-//            @Valid @RequestBody LoginDto loginDto
-//           ) {
-//        return accountService.Login(loginDto) ;
-//    }
+    @PostMapping("/login")
+    public ResponseEntity<Object> login(
+            @Valid @RequestBody LoginDto loginDto
+           ) {
+        return accountService.Login(loginDto) ;
+    }
 }
